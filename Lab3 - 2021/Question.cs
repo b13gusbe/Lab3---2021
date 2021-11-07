@@ -25,7 +25,7 @@ namespace Lab3___2021
             Answers = answers;
             this.correctAnswer = correctAnswer;
             Subject = subject;
-            Uri resourceUri = new Uri("/Images/Sunflower.jpg", UriKind.Relative);
+            Uri resourceUri = new Uri("/Images/QuestionMark.jpg", UriKind.Relative);
             ImageUri = resourceUri;
         }
 

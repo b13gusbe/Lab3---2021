@@ -35,18 +35,29 @@
             <RowDefinition MaxHeight="60" />
         </Grid.RowDefinitions>
 
-        <Label
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Content="1 / 20"
-            FontSize="16"
-            FontWeight="Bold" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Label
+                HorizontalAlignment="Center"
+                Content="Question"
+                FontWeight="Bold" />
+            <Label
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="{Binding ProgressLabel}"
+                FontSize="16"
+                FontWeight="Bold" />
+        </Grid>
 
         <Label
             Grid.ColumnSpan="3"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Content="Statement"
+            Content="{Binding CurrentQuestion.Statement}"
             FontSize="20"
             FontWeight="Bold" />
 
@@ -59,24 +70,41 @@
         <Image
             Grid.Row="1"
             Grid.ColumnSpan="3"
-            Source="/Images/Sunflower.jpg" />
+            Source="{Binding CurrentQuestion.ImageUri}" />
 
         <Button
             Grid.Row="2"
             Grid.ColumnSpan="3"
             Command="{Binding Answer1Command}"
-            Content="Answer 1" />
+            Content="{Binding CurrentQuestion.Answers[0]}" />
         <Button
             Grid.Row="3"
             Grid.ColumnSpan="3"
             Command="{Binding Answer2Command}"
-            Content="Answer 2" />
+            Content="{Binding CurrentQuestion.Answers[1]}" />
         <Button
             Grid.Row="4"
             Grid.ColumnSpan="3"
             Command="{Binding Answer3Command}"
-            Content="Answer 3" />
+            Content="{Binding CurrentQuestion.Answers[2]}" />
 
+        <Grid Grid.Row="4">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Label
+                HorizontalAlignment="Center"
+                Content="Score"
+                FontWeight="Bold" />
+            <Label
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="{Binding Score}"
+                FontSize="16"
+                FontWeight="Bold" />
+        </Grid>
 
 
     </Grid>

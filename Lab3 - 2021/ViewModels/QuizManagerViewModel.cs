@@ -18,11 +18,10 @@ namespace Lab3___2021.ViewModels
 {
     public class QuizManagerViewModel : ObservableObject
     {
-        //private readonly QuizManagerModel _model;
         private readonly NavigationManager _navigationManager;
         private readonly DataModel _dataModel;
 
-        public ObservableCollection<Quiz> Quizes => _dataModel._quizes;
+        public ObservableCollection<Quiz> Quizes => _dataModel._quizzes;
         public ObservableCollection<Question> Questions
         {
             get
@@ -104,26 +103,6 @@ namespace Lab3___2021.ViewModels
             }
         }
 
-
-        //public string Title
-        //{
-        //    //get { return _selectedQuiz.Title; }
-        //    get
-        //    {
-        //        if(_selectedQuiz == null)
-        //        {
-        //            return null;
-        //        }
-        //        return _selectedQuiz.Title;
-        //    }
-        //    set 
-        //    {
-        //        SetProperty(_selectedQuiz.Title, value, _selectedQuiz, (quiz, value) => quiz.Title = value);
-        //    }
-        //}
-
-
-
         private Quiz _selectedQuiz;
         public Quiz SelectedQuiz
         {
@@ -134,8 +113,7 @@ namespace Lab3___2021.ViewModels
                 OnPropertyChanged(nameof(Questions));
             }
         }
-        // Om jag vill förändra ett värde så vill jag anropa SetProperty
-        // Om något påverkar en annan property så måste man använda OnPropertyChanged för att uppdatera
+        
 
         private Question _selectedQuestion;
         public Question SelectedQuestion
@@ -150,21 +128,10 @@ namespace Lab3___2021.ViewModels
             }
         }
 
-        private readonly string fileName = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "hejsevejs\\Test.txt");
-
-
         public QuizManagerViewModel(NavigationManager navigationManager, DataModel dataModel)
         {
             _navigationManager = navigationManager;
             _dataModel = dataModel;
-            //if (File.Exists(fileName))
-            //{
-            //    string jsonString = File.ReadAllText(fileName);
-            //    _model._quizes = JsonSerializer.Deserialize<ObservableCollection<Quiz>>(jsonString);
-            //    Console.WriteLine();
-            //}
-           
-            //SelectedQuiz = Quizes[0];
         }
 
         public ICommand AddQuizCommand => new RelayCommand(() => _dataModel.AddQuiz(new Quiz("New Quiz", null)));
@@ -185,21 +152,36 @@ namespace Lab3___2021.ViewModels
                 SelectedQuiz.RemoveQuestion(SelectedQuestion);
             }            
         });
-
-       
-
-
+        
         public ICommand ChoosePictureCommand => new RelayCommand(ChoosePicture);
+
+        private readonly string imageFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "QuizImages\\");
 
         public void ChoosePicture()
         {
+            if (!Directory.Exists(imageFolder))
+            {
+                Directory.CreateDirectory(imageFolder);
+            }
             OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "Image File (*.jpg)|*.jpg|All files (*.*)|*.*";
+            if(fileDialog.ShowDialog() == true)
+            {
+                string imageDestination = imageFolder + "\\" + fileDialog.SafeFileName;
+                if (!File.Exists(imageDestination))
+                {
+                    File.Copy(fileDialog.FileName, imageDestination);
+                }
+                _selectedQuestion.ImageUri = new Uri(imageDestination);
+                OnPropertyChanged(nameof(SelectedQuestion));
+            }
         }
-
-        public ICommand SaveQuizesCommand => new RelayCommand(() => _dataModel.SaveQuizes());
-
-        public ICommand MainMenuCommand => new RelayCommand(() => _navigationManager.SelectedViewModel = new MainMenuViewModel(_navigationManager, _dataModel));
-
-
+        
+        public ICommand MainMenuCommand => new RelayCommand(SaveAndMainMenu);
+        public void SaveAndMainMenu()
+        {
+            _ = _dataModel.SaveQuizes();
+            _navigationManager.SelectedViewModel = new MainMenuViewModel(_navigationManager, _dataModel);
+        }
     }
 }

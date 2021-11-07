@@ -24,5 +24,6 @@ namespace Lab3___2021
         {
             InitializeComponent();
         }
+
     }
 }

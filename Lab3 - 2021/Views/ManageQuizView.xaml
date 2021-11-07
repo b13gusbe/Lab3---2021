@@ -116,7 +116,7 @@
                 Grid.ColumnSpan="2"
                 MaxWidth="100"
                 VerticalAlignment="Bottom"
-                Command="{Binding SaveQuizesCommand}"
+                Command="{Binding ChoosePictureCommand}"
                 Content="Change Picture" />
 
 

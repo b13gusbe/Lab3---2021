@@ -10,7 +10,6 @@ namespace Lab3___2021.Managers
     class DataManager
     {
         private DataModel _dataModel = new DataModel();
-
         public DataModel DataModel => _dataModel;
     }
 }

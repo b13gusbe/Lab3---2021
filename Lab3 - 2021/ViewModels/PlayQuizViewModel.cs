@@ -8,30 +8,61 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Lab3___2021.ViewModels
 {
     class PlayQuizViewModel : ObservableObject
     {
-        private NavigationManager _navigationManager;
-        private DataModel _dataModel;
-        private Quiz _quiz;
-        private ObservableCollection<string> _subjects;
-
-        private int _score;
-        private Question _currentQuestion;
+        private readonly NavigationManager _navigationManager;
+        private readonly DataModel _dataModel;
         
+        private int _currentQuestionIndex;
+        private ObservableCollection<Question> _playQuiz;
 
-        public PlayQuizViewModel(NavigationManager navigationManager, DataModel datamodel, Quiz quiz, ObservableCollection<string> subjects)
+
+        public int Score { get; set; }
+        public string ProgressLabel { get; set; }
+        public Question CurrentQuestion { get; set; }
+
+
+        public PlayQuizViewModel(NavigationManager navigationManager, DataModel datamodel, Quiz quiz, object subjects)
         {
             _navigationManager = navigationManager;
             _dataModel = datamodel;
-            _quiz = quiz;
-            _subjects = subjects;
-            //_currentQuestion = _quiz.Questions[0];
+            _currentQuestionIndex = 0;
+            
+            GenerateQuiz(quiz.Questions, subjects);
+            CurrentQuestion = _playQuiz[0];
+            ProgressLabel = $"{_currentQuestionIndex + 1} / {_playQuiz.Count}";
         }
 
+        private void GenerateQuiz(ObservableCollection<Question> questions, object subjects)
+        {
+
+            System.Collections.IList items = (System.Collections.IList)subjects;
+            var subjects2 = items.Cast<string>().ToList();
+            
+
+            if (subjects2.Count == 0)
+            {
+                _playQuiz = new ObservableCollection<Question>(questions);
+            } else
+            {
+                _playQuiz = new ObservableCollection<Question>();
+                
+                foreach (string subject in subjects2)
+                {
+                    var temp = new List<Question>(questions);
+                    temp = temp.FindAll(question => question.Subject == subject);
+                    foreach(Question question in temp)
+                    {
+                        _playQuiz.Add(question);
+                    }                    
+                }
+            }
+        }
 
         public ICommand MainMenuCommand => new RelayCommand(() => _navigationManager.SelectedViewModel = new MainMenuViewModel(_navigationManager, _dataModel));
 
@@ -42,33 +73,48 @@ namespace Lab3___2021.ViewModels
 
         private void Answer1Selected()
         {
-            if(_currentQuestion.CorrectAnswer == 0)
+            if(CurrentQuestion.CorrectAnswer == 0)
             {
-                _score++;
+                Score++;
             }
+            NextQuestion();
         }        
         
 
         private void Answer2Selected()
         {
-            if (_currentQuestion.CorrectAnswer == 0)
+            if (CurrentQuestion.CorrectAnswer == 1)
             {
-                _score++;
+                Score++;
             }
+            NextQuestion();
         }        
         
 
         private void Answer3Selected()
         {
-            if (_currentQuestion.CorrectAnswer == 0)
+            if (CurrentQuestion.CorrectAnswer == 2)
             {
-                _score++;
+                Score++;
             }
+            NextQuestion();
         }
 
         private void NextQuestion()
         {
-
+            if(_currentQuestionIndex == _playQuiz.Count - 1)
+            {
+                MessageBox.Show($"Du hade rätt på {Score} av {_playQuiz.Count} frågor.");
+            }
+            else
+            {
+                _currentQuestionIndex++;
+                CurrentQuestion = _playQuiz[_currentQuestionIndex];
+                ProgressLabel = $"{_currentQuestionIndex + 1} / {_playQuiz.Count}";
+                OnPropertyChanged(nameof(CurrentQuestion));
+                OnPropertyChanged(nameof(ProgressLabel));
+                OnPropertyChanged(nameof(Score));
+            }
         }
 
     }

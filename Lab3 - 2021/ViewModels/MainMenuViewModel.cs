@@ -8,6 +8,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using System.Windows.Controls;
 
 namespace Lab3___2021.ViewModels
 {
@@ -19,18 +21,19 @@ namespace Lab3___2021.ViewModels
         public IRelayCommand NavigatePlayCommand { get; }
         public IRelayCommand NavigateManageCommand { get; }
         public IRelayCommand ExitGameCommand { get; }
-
+        
 
         public MainMenuViewModel( NavigationManager navigationManager, DataModel dataModel)
         {
             _navigationManager = navigationManager;
             _dataModel = dataModel;
-            NavigatePlayCommand = new RelayCommand(() => _navigationManager.SelectedViewModel = new PlayQuizViewModel(_navigationManager, _dataModel, _selectedQuiz, Subjects));
+            NavigatePlayCommand = new RelayCommand<object>((a) => _navigationManager.SelectedViewModel = new PlayQuizViewModel(_navigationManager, _dataModel, _selectedQuiz, a));
             NavigateManageCommand = new RelayCommand(() => _navigationManager.SelectedViewModel = new QuizManagerViewModel(_navigationManager, _dataModel));
             ExitGameCommand = new RelayCommand(() => Environment.Exit(0));
         }
 
-        public ObservableCollection<Quiz> Quizes => _dataModel._quizes;
+
+        public ObservableCollection<Quiz> Quizes => _dataModel._quizzes;
 
         public ObservableCollection<Question> Questions
         {
@@ -48,7 +51,7 @@ namespace Lab3___2021.ViewModels
         {
             get
             {
-                ObservableCollection<string> subjects = new ObservableCollection<string>();
+                ObservableCollection<string> subjects = new();
 
                 if (SelectedQuiz != null)
                 {
