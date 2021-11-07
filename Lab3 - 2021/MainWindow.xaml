@@ -5,12 +5,25 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Lab3___2021"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:Lab3___2021.ViewModels"
     xmlns:views="clr-namespace:Lab3___2021.Views"
     Title="MainWindow"
     Width="800"
     Height="450"
     mc:Ignorable="d">
     <Grid>
-        <views:ManageQuizView />
+        <Grid.Resources>
+            <DataTemplate DataType="{x:Type viewmodels:MainMenuViewModel}">
+                <views:MainMenuView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:QuizManagerViewModel}">
+                <views:ManageQuizView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:PlayQuizViewModel}">
+                <views:PlayQuizView />
+            </DataTemplate>
+        </Grid.Resources>
+
+        <ContentControl Content="{Binding SelectedViewModel}" />
     </Grid>
 </Window>

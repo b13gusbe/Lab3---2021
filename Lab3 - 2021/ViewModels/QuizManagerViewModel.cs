@@ -12,14 +12,17 @@ using System.Collections.ObjectModel;
 using Microsoft.Win32;
 using System.IO;
 using System.Text.Json;
+using Lab3___2021.Managers;
 
 namespace Lab3___2021.ViewModels
 {
     public class QuizManagerViewModel : ObservableObject
     {
-        private readonly QuizManagerModel _model;
+        //private readonly QuizManagerModel _model;
+        private readonly NavigationManager _navigationManager;
+        private readonly DataModel _dataModel;
 
-        public ObservableCollection<Quiz> Quizes => _model._quizes;
+        public ObservableCollection<Quiz> Quizes => _dataModel._quizes;
         public ObservableCollection<Question> Questions
         {
             get
@@ -150,22 +153,23 @@ namespace Lab3___2021.ViewModels
         private readonly string fileName = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "hejsevejs\\Test.txt");
 
 
-        public QuizManagerViewModel(QuizManagerModel model)
+        public QuizManagerViewModel(NavigationManager navigationManager, DataModel dataModel)
         {
-            _model = model;
-            if (File.Exists(fileName))
-            {
-                string jsonString = File.ReadAllText(fileName);
-                _model._quizes = JsonSerializer.Deserialize<ObservableCollection<Quiz>>(jsonString);
-
-            }
+            _navigationManager = navigationManager;
+            _dataModel = dataModel;
+            //if (File.Exists(fileName))
+            //{
+            //    string jsonString = File.ReadAllText(fileName);
+            //    _model._quizes = JsonSerializer.Deserialize<ObservableCollection<Quiz>>(jsonString);
+            //    Console.WriteLine();
+            //}
            
             //SelectedQuiz = Quizes[0];
         }
 
-        public ICommand AddQuizCommand => new RelayCommand(() => _model.AddQuiz(new Quiz("New Quiz")));
+        public ICommand AddQuizCommand => new RelayCommand(() => _dataModel.AddQuiz(new Quiz("New Quiz", null)));
 
-        public ICommand RemoveQuizCommand => new RelayCommand(() => _model.RemoveQuiz(SelectedQuiz));
+        public ICommand RemoveQuizCommand => new RelayCommand(() => _dataModel.RemoveQuiz(SelectedQuiz));
 
         public ICommand AddQuestionCommand => new RelayCommand(() =>
         {
@@ -192,7 +196,9 @@ namespace Lab3___2021.ViewModels
             OpenFileDialog fileDialog = new OpenFileDialog();
         }
 
-        public ICommand SaveQuizesCommand => new RelayCommand(() => _model.SaveQuizes());
+        public ICommand SaveQuizesCommand => new RelayCommand(() => _dataModel.SaveQuizes());
+
+        public ICommand MainMenuCommand => new RelayCommand(() => _navigationManager.SelectedViewModel = new MainMenuViewModel(_navigationManager, _dataModel));
 
 
     }

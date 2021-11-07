@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Lab3___2021.Managers
 {
-    class NavigationManager
+    public class NavigationManager
     {
         private ObservableObject _selectedViewModel;
 

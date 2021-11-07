@@ -8,25 +8,28 @@ using System.Threading.Tasks;
 
 namespace Lab3___2021
 {
-    [Serializable]
+    
     public class Quiz
     {
-        public ICollection<Question> Questions { get; }
+        //Om jag använder Questions som en ICollection här och sätter en set; då slutar listboxen att fungera, utan set fungerar det inte att spara.
+        //Jag testade även att casta set med as ObservableCollection<Question> men det orskade en stackoverflow
+        //public ICollection<Question> Questions { get; }
+        public ObservableCollection<Question> Questions { get; set; }
         public string Title { get; set; }
 
         private static readonly Random random = new();
 
-        public Quiz(string title)
+        public Quiz(string title, ObservableCollection<Question> questions)
         {
             Title = title;
-            Questions = new ObservableCollection<Question>();
+            if(questions != null)
+            {
+                Questions = questions;
+            } else
+            {
+                Questions = new ObservableCollection<Question>();
+            }
         }
-
-        public Quiz()
-        {
-
-        }
-
 
         public Question GetRandomQuestion()
         {

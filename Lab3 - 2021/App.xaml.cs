@@ -19,28 +19,37 @@ namespace Lab3___2021
     {
 
         private readonly NavigationManager _navigationManager;
+        private readonly DataManager _dataManager;
 
         public App()
         {
             _navigationManager = new NavigationManager();
+            _dataManager = new DataManager();
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
+
+            //var quizes = new ObservableCollection<Quiz>();
+            //Quiz testQuiz = new Quiz("Test Quiz");
+            //testQuiz.AddQuestion("Test Statement", 2, "Test Subject", new string[] { "Answer 1", "Answer 2", "Answer 3" });
+
+            //quizes.Add(testQuiz);
+
+            //var model = new QuizManagerModel(quizes);
+            //var quizesPresenter = new QuizManagerViewModel(model);
+            //var quizManagerWindow = new MainWindow { DataContext = quizesPresenter };
+
+
+            //quizManagerWindow.Show();
+
+            //base.OnStartup(e);
+
+            _navigationManager.SelectedViewModel = new MainMenuViewModel(_navigationManager, _dataManager.DataModel);
+            var mainWindow = new MainWindow { DataContext = new RootViewModel(_navigationManager, _dataManager)};
+            mainWindow.Show();
             base.OnStartup(e);
 
-            var quizes = new ObservableCollection<Quiz>();
-            Quiz testQuiz = new Quiz("Test Quiz");
-            testQuiz.AddQuestion("Test Statement", 2, "Test Subject", new string[] { "Answer 1", "Answer 2", "Answer 3" });
-            
-            quizes.Add(testQuiz);
-
-            var model = new QuizManagerModel(quizes);
-            var quizesPresenter = new QuizManagerViewModel(model);
-            var quizManagerWindow = new MainWindow { DataContext = quizesPresenter };
-
-            
-            quizManagerWindow.Show();
         }
     }
 }

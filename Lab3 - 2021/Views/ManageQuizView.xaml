@@ -179,6 +179,11 @@
                 Margin="50,5,30,5"
                 BorderThickness="10"
                 Text="{Binding SelectedQuestion.Subject, Mode=TwoWay}" />
+            <Button
+                Grid.Row="4"
+                Grid.Column="1"
+                Command="{Binding MainMenuCommand}"
+                Content="Main Menu" />
 
         </Grid>
 

@@ -7,7 +7,7 @@ using System.Windows.Media.Imaging;
 
 namespace Lab3___2021
 {
-    [Serializable]
+    
     public class Question
     {
         public string Statement { get; set; }
@@ -27,11 +27,6 @@ namespace Lab3___2021
             Subject = subject;
             Uri resourceUri = new Uri("/Images/Sunflower.jpg", UriKind.Relative);
             ImageUri = resourceUri;
-        }
-
-        public Question()
-        {
-
         }
 
         public override string ToString()
